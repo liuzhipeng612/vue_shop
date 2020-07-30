@@ -1,31 +1,80 @@
 <template>
+  <!-- 登录容器 -->
   <div class="login_container">
+    <!-- 登录盒子 -->
     <div class="login_box">
       <!-- 头像区域 -->
       <div class="avatar_box">
         <img alt="user logo" src="../assets/logo.png">
       </div>
       <!-- 登录表单区域 -->
-      <el-form class="login_form">
+      <el-form :model="loginForm" :rules="loginFormRules" class="login_form" ref="loginFormRef">
         <!-- 用户名 -->
-        <el-form-item>
-          <el-input></el-input>
+        <el-form-item prop="username">
+          <el-input prefix-icon="iconfont icon-user" v-model="loginForm.username"></el-input>
         </el-form-item>
         <!-- 密码 -->
-        <el-form-item>
-          <el-input></el-input>
+        <el-form-item prop="password">
+          <el-input prefix-icon="iconfont icon-3702mima" type="password" v-model="loginForm.password"></el-input>
         </el-form-item>
         <!-- 按钮 -->
         <el-form-item class="btns">
-          <el-button type="primary">登录</el-button>
-          <el-button type="info">重置</el-button>
+          <el-button @click="login" type="primary">登录</el-button>
+          <el-button @click="resetLoginForm" type="info">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
 <script>
-export default {}
+export default {
+  data () {
+    return {
+      // 这是登录表单的数据绑定对象
+      loginForm: {
+        username: 'dd',
+        password: '123'
+      },
+      // 这是表单的验证规则对象
+      loginFormRules: {
+        // 验证用户名是否和发
+        username: [{
+          required: true,
+          message: '请输入登录名称',
+          trigger: 'blur'
+        }, {
+          min: 3,
+          max: 10,
+          message: '长度在 3 到 10 个字符',
+          trigger: 'blur'
+        }],
+        // 验证密码是否合法
+        password: [{
+          required: true,
+          message: '请输入登录密码',
+          trigger: 'blur'
+        }, {
+          min: 6,
+          max: 15,
+          message: '长度在 6 到 15 个字符',
+          trigger: 'blur'
+        }]
+      }
+    }
+  },
+  methods: {
+    // 点击充值按钮，重置登录表单
+    resetLoginForm () {
+      // console.log(this)
+      this.$refs.loginFormRef.resetFields()
+    },
+    login () {
+      this.$refs.loginFormRef.validate(valid => {
+        console.log(valid)
+      })
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
 .login_container {
@@ -68,7 +117,7 @@ export default {}
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 0 20px;
+  padding: 0 40px;
   box-sizing: border-box;
 }
 
