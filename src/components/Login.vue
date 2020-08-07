@@ -32,8 +32,8 @@ export default {
     return {
       // 这是登录表单的数据绑定对象
       loginForm: {
-        username: 'dd',
-        password: '123'
+        username: 'Daodao',
+        password: '123456'
       },
       // 这是表单的验证规则对象
       loginFormRules: {
@@ -69,8 +69,17 @@ export default {
       this.$refs.loginFormRef.resetFields()
     },
     login () {
-      this.$refs.loginFormRef.validate(valid => {
+      this.$refs.loginFormRef.validate(async (valid) => {
+        // 打印校验值
         console.log(valid)
+        // 判断校验值是否正确，如果不正确返回空，如果正确发起api请求
+        if (!valid) return
+        // await方法可以简化返回结果，同时需要在await前面最近一个函数前添加async异步函数展示返回结果
+        // 将请求结果中的data重命名为res对象
+        const { data: res } = await this.$http.post('login', this.loginForm)
+        console.log(res)
+        if (res.meta.status !== 200) return console.log('登录失败')
+        console.log('登录成功')
       })
     }
   }
