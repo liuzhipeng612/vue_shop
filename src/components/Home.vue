@@ -19,6 +19,7 @@
           :collapse="isCollapse"
           :collapse-transition="false"
           :unique-opened="true"
+          :router="true"
           active-text-color="#409EFF"
           background-color="#333744"
           text-color="#fff">
@@ -32,7 +33,7 @@
               <span>{{ item.authName }}</span>
             </template>
             <!-- 二级菜单 -->
-            <el-menu-item :index="subitem.id+''" :key="subitem.id" v-for="subitem in item.children">
+            <el-menu-item :index="'/'+subitem.path+''" :key="subitem.id" v-for="subitem in item.children">
               <!-- 二级菜单的模板区域 -->
               <template slot="title">
                 <!-- 图标 -->
@@ -45,7 +46,9 @@
         </el-menu>
         <div @click="toggleCollapse" class="toggle-button">|||</div>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -73,7 +76,7 @@ export default {
   },
   methods: {
     logout () {
-      // 使用window DOM调用seesionStorage的clear方法清空token
+      // 使用window DOM调用sessionStorage的clear方法清空token
       window.sessionStorage.clear()
       // 使用router路由，push到对应页面
       this.$router.push('/login')
@@ -122,8 +125,6 @@ export default {
 
 .el-aside {
   background-color: #333744;
-  display: flex;
-  flex-flow: row wrap;
 
   .el-menu {
     border-right: none;
@@ -131,8 +132,9 @@ export default {
 
   .toggle-button {
     display: flex;
+    position: absolute;
+    bottom: 0;
     justify-content: center;
-    align-self: flex-end;
     font-size: 10px;
     height: 64px;
     width: 64px;
