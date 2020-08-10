@@ -12,10 +12,14 @@
     <!--  页面主体区域 -->
     <el-container>
       <!-- 侧边栏 -->
-      <el-aside width="200px">
+      <el-aside :width="isCollapse ? '64px' : '200px'">
+        <!--        <div class="toggle-button" @click="toggleCollapse">|||</div>-->
         <!-- 侧边栏菜单区域 -->
         <el-menu
-          active-text-color="#ffd04b"
+          :collapse="isCollapse"
+          :collapse-transition="false"
+          :unique-opened="true"
+          active-text-color="#409EFF"
           background-color="#333744"
           text-color="#fff">
           <!-- 一级菜单 -->
@@ -23,7 +27,7 @@
             <!-- 一级菜单的模板区域 -->
             <template slot="title">
               <!-- 图标 -->
-              <i class="el-icon-location"></i>
+              <i :class="iconsObj[item.id]"></i>
               <!-- 文本 -->
               <span>{{ item.authName }}</span>
             </template>
@@ -32,13 +36,14 @@
               <!-- 二级菜单的模板区域 -->
               <template slot="title">
                 <!-- 图标 -->
-                <i class="el-icon-location"></i>
+                <i class="el-icon-menu"></i>
                 <!-- 文本 -->
                 <span>{{ subitem.authName }}</span>
               </template>
             </el-menu-item>
           </el-submenu>
         </el-menu>
+        <div @click="toggleCollapse" class="toggle-button">|||</div>
       </el-aside>
       <el-main>Main</el-main>
     </el-container>
@@ -51,7 +56,15 @@ export default {
   data () {
     return {
       // 左侧菜单栏数据,定义为空，为了接受对应方法返回的数据
-      MenuList: []
+      MenuList: [],
+      iconsObj: {
+        125: 'iconfont icon-user',
+        103: 'iconfont icon-tijikongjian',
+        101: 'iconfont icon-shangpin',
+        102: 'iconfont icon-danju',
+        145: 'iconfont icon-baobiao'
+      },
+      isCollapse: false
     }
   },
   // 在没有完全生成这个组件内存数据是，使用声明周期函数钩子提前介入创建一个函数
@@ -75,6 +88,9 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.MenuList = res.data
       console.log(res)
+    },
+    toggleCollapse () {
+      this.isCollapse = !this.isCollapse
     }
   }
 }
@@ -106,6 +122,29 @@ export default {
 
 .el-aside {
   background-color: #333744;
+  display: flex;
+  flex-flow: row wrap;
+
+  .el-menu {
+    border-right: none;
+  }
+
+  .toggle-button {
+    display: flex;
+    justify-content: center;
+    align-self: flex-end;
+    font-size: 10px;
+    height: 64px;
+    width: 64px;
+    color: #fff;
+    line-height: 64px;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+  }
+}
+
+.iconfont {
+  margin-right: 10px;
 }
 
 .el-main {
