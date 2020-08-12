@@ -20,6 +20,7 @@
           :collapse-transition="false"
           :unique-opened="true"
           :router="true"
+          :default-active="activePath"
           active-text-color="#409EFF"
           background-color="#333744"
           text-color="#fff">
@@ -33,7 +34,8 @@
               <span>{{ item.authName }}</span>
             </template>
             <!-- 二级菜单 -->
-            <el-menu-item :index="'/'+subitem.path+''" :key="subitem.id" v-for="subitem in item.children">
+            <el-menu-item :index="'/'+subitem.path+''" :key="subitem.id" @click="saveNavState('/'+subitem.path)"
+                          v-for="subitem in item.children">
               <!-- 二级菜单的模板区域 -->
               <template slot="title">
                 <!-- 图标 -->
@@ -67,12 +69,14 @@ export default {
         102: 'iconfont icon-danju',
         145: 'iconfont icon-baobiao'
       },
-      isCollapse: false
+      isCollapse: false,
+      activePath: ''
     }
   },
   // 在没有完全生成这个组件内存数据是，使用声明周期函数钩子提前介入创建一个函数
   created () {
     this.getMenuList()
+    this.activePath = window.sessionStorage.getItem('activePath')
   },
   methods: {
     logout () {
@@ -92,8 +96,14 @@ export default {
       this.MenuList = res.data
       console.log(res)
     },
+    // 点击按钮，切换菜单的折叠与展开
     toggleCollapse () {
       this.isCollapse = !this.isCollapse
+    },
+    // 保存链接的激活状态
+    saveNavState (activePath) {
+      window.sessionStorage.setItem('activePath', activePath)
+      this.activePath = activePath
     }
   }
 }
