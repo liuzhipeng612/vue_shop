@@ -19,6 +19,41 @@
           <el-button type="primary">添加用户</el-button>
         </el-col>
       </el-row>
+      <!-- 用户列表区域 -->
+      <el-table :data="userlist" border stripe>
+        <el-table-column type="index"></el-table-column>
+        <el-table-column label="姓名" prop="username"></el-table-column>
+        <el-table-column label="邮箱" prop="email"></el-table-column>
+        <el-table-column label="电话" prop="mobile"></el-table-column>
+        <el-table-column label="角色" prop="role_name"></el-table-column>
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.mg_state"></el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="180px">
+          <template>
+            <!--修改按钮-->
+            <el-button icon="el-icon-edit" size="mini" type="primary"></el-button>
+            <!--删除按钮-->
+            <el-button icon="el-icon-delete" size="mini" type="danger"></el-button>
+            <!--分配角色按钮-->
+            <el-tooltip :enterable="false" content="角色分配" effect="dark" placement="top">
+              <el-button icon="el-icon-setting" size="mini" type="warning"></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 分页区域-->
+      <el-pagination
+        :current-page="queryInfo.pagenum"
+        :page-size="queryInfo.pagesize"
+        :page-sizes="[1, 2, 3, 5]"
+        :total="total"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+        layout="total, sizes, prev, pager, next, jumper">
+      </el-pagination>
     </el-card>
   </div>
 </template>
@@ -35,7 +70,9 @@ export default {
         pagenum: 1,
         // 当前每页显示多少条数据
         pagesize: 2
-      }
+      },
+      userlist: [],
+      total: 0
     }
   },
   created () {
@@ -50,6 +87,18 @@ export default {
       this.userlist = res.data.users
       this.total = res.data.total
       console.log(res)
+    },
+    // 监听pagesize改变的事件
+    handleSizeChange (newsize) {
+      console.log(newsize)
+      this.queryInfo.pagesize = newsize
+      this.getUserList()
+    },
+    // 监听页码值改变的事件
+    handleCurrentChange (newpage) {
+      console.log(newpage)
+      this.queryInfo.pagenum = newpage
+      this.getUserList()
     }
   }
 }

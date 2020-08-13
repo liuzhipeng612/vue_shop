@@ -16,8 +16,13 @@ import {
   MenuItem,
   MenuItemGroup,
   Message,
+  Pagination,
   Row,
-  Submenu
+  Submenu,
+  Switch,
+  Table,
+  TableColumn,
+  Tooltip
 } from 'element-ui'
 
 Vue.use(Container)
@@ -37,6 +42,11 @@ Vue.use(BreadcrumbItem)
 Vue.use(Card)
 Vue.use(Row)
 Vue.use(Col)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Switch)
+Vue.use(Tooltip)
+Vue.use(Pagination)
 
 // 挂载Message组件
 Vue.prototype.$message = Message
