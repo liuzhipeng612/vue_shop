@@ -7,6 +7,7 @@ import {
   Card,
   Col,
   Container,
+  Dialog,
   Form,
   FormItem,
   Header,
@@ -47,6 +48,7 @@ Vue.use(TableColumn)
 Vue.use(Switch)
 Vue.use(Tooltip)
 Vue.use(Pagination)
+Vue.use(Dialog)
 
 // 挂载Message组件
 Vue.prototype.$message = Message
