@@ -23,7 +23,8 @@ import {
   Switch,
   Table,
   TableColumn,
-  Tooltip
+  Tooltip,
+  MessageBox
 } from 'element-ui'
 
 Vue.use(Container)
@@ -52,3 +53,4 @@ Vue.use(Dialog)
 
 // 挂载Message组件
 Vue.prototype.$message = Message
+Vue.prototype.$confirm = MessageBox.confirm

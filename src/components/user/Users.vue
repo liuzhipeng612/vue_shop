@@ -36,7 +36,7 @@
             <!--修改按钮-->
             <el-button icon="el-icon-edit" size="mini" type="primary" @click="editUser(scope.row.id)"></el-button>
             <!--删除按钮-->
-            <el-button icon="el-icon-delete" size="mini" type="danger"></el-button>
+            <el-button icon="el-icon-delete" size="mini" type="danger" @click="delUser(scope.row.id)"></el-button>
             <!--分配角色按钮-->
             <el-tooltip :enterable="false" content="角色分配" effect="dark" placement="top">
               <el-button icon="el-icon-setting" size="mini" type="warning"></el-button>
@@ -331,7 +331,58 @@ export default {
         // 提示修改成功
         this.$message.success(res.meta.msg)
       })
+    },
+    delUser (id) {
+      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        const { data: res } = await this.$http.delete(`users/${id}`)
+        if (res.meta.status !== 200) {
+          return this.$message.error(res.meta.msg)
+        }
+        this.$message({
+          type: 'success',
+          message: res.meta.msg
+        })
+        this.getUserList()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
+    // 根据Id删除对应的用户信息
+    // async delUser (id) {
+    //   // 弹框询问用户是否删除数据
+    //   const confirmResult = await this.$confirm(
+    //     '此操作将永久删除该用户, 是否继续?',
+    //     '提示',
+    //     {
+    //       confirmButtonText: '确定',
+    //       cancelButtonText: '取消',
+    //       type: 'warning'
+    //     }
+    //   ).catch(err => err)
+    //
+    //   // 如果用户确认删除，则返回值为字符串 confirm
+    //   // 如果用户取消了删除，则返回值为字符串 cancel
+    //   // console.log(confirmResult)
+    //   if (confirmResult !== 'confirm') {
+    //     return this.$message.info('已取消删除')
+    //   }
+    //
+    //   const { data: res } = await this.$http.delete('users/' + id)
+    //
+    //   if (res.meta.status !== 200) {
+    //     return this.$message.error('删除用户失败！')
+    //   }
+    //
+    //   this.$message.success('删除用户成功！')
+    //   this.getUserList()
+    // }
   }
 }
 </script>
