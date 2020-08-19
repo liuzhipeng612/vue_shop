@@ -21,7 +21,7 @@
       </el-row>
       <!-- 用户列表区域 -->
       <el-table :data="userlist" border stripe>
-        <el-table-column type="index"></el-table-column>
+        <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column label="姓名" prop="username"></el-table-column>
         <el-table-column label="邮箱" prop="email"></el-table-column>
         <el-table-column label="电话" prop="mobile"></el-table-column>
@@ -137,7 +137,7 @@ export default {
         // 当前的页数
         pagenum: 1,
         // 当前每页显示多少条数据
-        pagesize: 2
+        pagesize: 5
       },
       userlist: [],
       total: 0,

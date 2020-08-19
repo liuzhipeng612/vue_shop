@@ -94,7 +94,7 @@ export default {
       // 如果是200，则将res.data的赋值给dat()方法中的菜单数据
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.MenuList = res.data
-      console.log(res)
+      // console.log(res)
     },
     // 点击按钮，切换菜单的折叠与展开
     toggleCollapse () {
