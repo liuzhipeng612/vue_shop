@@ -326,10 +326,10 @@ export default {
         this.editForm = res.data
         // 关闭对话框
         this.editDialogVisible = false
-        // 刷新数据列表
-        this.getUserList()
         // 提示修改成功
         this.$message.success(res.meta.msg)
+        // 刷新列表数据
+        this.getUserList()
       })
     },
     delUser (id) {
