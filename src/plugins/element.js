@@ -25,7 +25,10 @@ import {
   TableColumn,
   Tooltip,
   MessageBox,
-  Tag
+  Tag,
+  Tree,
+  Select,
+  Option
 } from 'element-ui'
 
 Vue.use(Container)
@@ -52,6 +55,9 @@ Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Dialog)
 Vue.use(Tag)
+Vue.use(Tree)
+Vue.use(Select)
+Vue.use(Option)
 
 // 挂载Message组件
 Vue.prototype.$message = Message
