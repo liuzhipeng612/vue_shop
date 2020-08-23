@@ -4,6 +4,7 @@ import router from './router'
 import './plugins/element.js'
 import './assets/css/global.css'
 import './assets/fonts/iconfont.css'
+import ZkTable from 'vue-table-with-tree-grid'
 
 // 导入axios发起api请求
 import axios from 'axios'
@@ -19,6 +20,7 @@ axios.interceptors.request.use((config) => {
 // 配置Vue原属性prototype的$http采用axios插件
 // 将axios关联到Vue的原型对象$http上
 Vue.prototype.$http = axios
+Vue.component(ZkTable.name, ZkTable)
 
 Vue.config.productionTip = false
 

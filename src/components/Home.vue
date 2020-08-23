@@ -142,7 +142,7 @@ export default {
 
   .toggle-button {
     display: flex;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     justify-content: center;
     font-size: 10px;
