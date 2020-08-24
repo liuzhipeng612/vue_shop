@@ -53,17 +53,15 @@
     <!-- 添加分类按钮区域 -->
     <el-dialog
       title="添加分类" :visible.sync="addCateDialogVisible" width="50%">
-      <el-form :model="cateList" :rules="addCateFormRules" ref="addCateFormRule" label-width="100px">
-        <el-form-item label="分类名称" prop="cat_name">
-          <el-input v-model="cateList.cat_name"></el-input>
+      <el-form :model="addCateInfo" :rules="addCateFormRules" ref="addCateFormRule" label-width="100px">
+        <el-form-item label="分类名称：" prop="cat_name">
+          <el-input v-model="addCateInfo.cat_name"></el-input>
         </el-form-item>
-        <el-form-item label="父级分类">
-          <el-cascader
-            v-model="addCatePidList"
-            :options="addCateList"
-            :props="cascaderProps"
-            expand-trigger="hover"
-            @change="handleChange">
+        <el-form-item label="父级分类：">
+          <!-- options 用来指定数据源 -->
+          <!-- props 用来指定配置对象 -->
+          <el-cascader v-model="selectedKeys" :options="addCatePidList" :props="addCascaderProps" expand-trigger="hover"
+                       @change="addCateChanged" clearable change-on-select>
           </el-cascader>
         </el-form-item>
       </el-form>
@@ -112,7 +110,7 @@ export default {
           label: '操作',
           type: 'template',
           template: 'cat_set',
-          width: '180px'
+          width: '181px'
         }
       ],
       // 添加分类按钮默认隐藏
@@ -133,14 +131,21 @@ export default {
           }
         ]
       },
-      // 添加分类PID列表
+      // 添加分类请求信息
+      addCateInfo: {
+        cat_pid: 0,
+        cat_name: '',
+        cat_level: 0
+      },
+      // 添加分类父分类ID列表
       addCatePidList: [],
       // 添加分类列表选项
-      addCateList: [{
-        value: 0,
-        label: '',
-        children: {}
-      }]
+      addCascaderProps: {
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children'
+      },
+      selectedKeys: []
     }
   },
   created () {
@@ -169,13 +174,29 @@ export default {
       this.queryInfo.pagenum = newPage
       this.getCateList()
     },
-    async addCateDialogShow () {
-      const { data: res } = await this.$http.get('categories', { params: { type: 2 } })
-      console.log(res)
-      this.addCateList.value = res.data.id
-      this.addCateList.label = res.data.cat_name
-      this.addCateList.children = res.data.children
+    addCateDialogShow () {
+      this.getCateListTwoLevel()
       this.addCateDialogVisible = true
+    },
+    async getCateListTwoLevel () {
+      const { data: res } = await this.$http.get('categories', { params: { type: 2 } })
+      // console.log(res)
+      this.addCatePidList = res.data
+    },
+    addCateChanged () {
+      this.addCateInfo.cat_pid = this.selectedKeys
+      // 如果 selectedKeys 数组中的 length 大于0，证明有选中的父级分类
+      // 反之，就说明没有选中任何父级分类
+      console.log(this.selectedKeys)
+      if (this.selectedKeys.length > 0) {
+        // 长度索引是从1开始计算的，-1是所得当前分类名称需要配置的父类ID
+        this.addCateInfo.cat_pid = this.selectedKeys[this.selectedKeys.length - 1]
+        this.addCateInfo.cat_level = this.selectedKeys.length
+      } else {
+        this.addCateInfo.cat_pid = 0
+        this.addCateInfo.cat_level = 0
+      }
+      // console.log(this.addCateInfo)
     }
   }
 }
@@ -185,5 +206,9 @@ export default {
 .zk-table {
   margin-top: 15px;
   font-size: 12px;
+}
+
+.el-cascader {
+  width: 100%;
 }
 </style>
