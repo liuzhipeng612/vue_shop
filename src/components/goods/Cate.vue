@@ -202,7 +202,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .zk-table {
   margin-top: 15px;
   font-size: 12px;
@@ -210,5 +210,9 @@ export default {
 
 .el-cascader {
   width: 100%;
+}
+
+.el-scrollbar {
+  height: 580px;
 }
 </style>
