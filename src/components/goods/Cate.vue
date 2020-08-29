@@ -52,8 +52,8 @@
     </el-card>
     <!-- 添加分类按钮区域 -->
     <el-dialog
-      title="添加分类" :visible.sync="addCateDialogVisible" width="50%">
-      <el-form :model="addCateInfo" :rules="addCateFormRules" ref="addCateFormRule" label-width="100px">
+      title="添加分类" :visible.sync="addCateDialogVisible" @close="addCateDialogHide" width="50%">
+      <el-form :model="addCateInfo" :rules="addCateFormRules" ref="addCateFormRef" label-width="100px">
         <el-form-item label="分类名称：" prop="cat_name">
           <el-input v-model="addCateInfo.cat_name"></el-input>
         </el-form-item>
@@ -67,7 +67,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addCateDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addCateDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addCateSubmit">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -197,12 +197,38 @@ export default {
         this.addCateInfo.cat_level = 0
       }
       // console.log(this.addCateInfo)
+    },
+    addCateDialogHide () {
+      this.$refs.addCateFormRef.resetFields()
+      this.addCateInfo.cat_pid = 0
+      this.addCateInfo.cat_level = 0
+      this.selectedKeys = []
+    },
+    addCateSubmit () {
+      this.$refs.addCateFormRef.validate(async (valid) => {
+        if (!valid) {
+          return this.$message.error('请按要求填写')
+        }
+        const { data: res } = await this.$http.post('categories', this.addCateInfo)
+        if (res.meta.status !== 201) {
+          return this.$message.error('添加分类失败')
+        }
+        this.$message.success('添加分类成功')
+        this.getCateList()
+        this.addCateDialogVisible = false
+      })
     }
   }
 }
 </script>
 
-<style lang="less">
+<style>
+.el-scrollbar {
+  height: 420px;
+}
+</style>
+
+<style lang="less" scoped>
 .zk-table {
   margin-top: 15px;
   font-size: 12px;
@@ -210,9 +236,5 @@ export default {
 
 .el-cascader {
   width: 100%;
-}
-
-.el-scrollbar {
-  height: 580px;
 }
 </style>

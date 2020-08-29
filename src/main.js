@@ -1,15 +1,15 @@
 import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import './plugins/element.js'
 import './assets/css/global.css'
 import './assets/fonts/iconfont.css'
 import ZkTable from 'vue-table-with-tree-grid'
+import './plugins/element.js'
+import App from './App.vue'
+import router from './router'
 
 // 导入axios发起api请求
 import axios from 'axios'
 // 设置api请求基本域名
-axios.defaults.baseURL = 'http://api.pysdev.com:8888/api/private/v1/'
+axios.defaults.baseURL = 'http://api.pysdev.com:8020/api/private/v1/'
 // axios请求拦截器interceptors中的请求方法的use回调函数
 axios.interceptors.request.use((config) => {
   // 给headers的Authorization赋值为登录时获取的token
