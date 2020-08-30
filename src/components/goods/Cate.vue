@@ -3,8 +3,8 @@
     <!-- 面包屑导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+      <el-breadcrumb-item>商品管理</el-breadcrumb-item>
+      <el-breadcrumb-item>商品分类</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图区域 -->
     <el-card class="box-card">
@@ -24,15 +24,18 @@
         :show-index="true"
         :expand-type="false"
         :selection-type="false">
+        <!-- 是否有效自定义列 -->
         <template slot="cat_deleted" slot-scope="scope">
           <i class="el-icon-success" v-if="scope.row.cat_deleted === false" style="color: lightgreen"></i>
           <i class="el-icon-error" v-else style="color: red"></i>
         </template>
+        <!-- 级别自定义列 -->
         <template slot="cat_level" slot-scope="scope">
           <el-tag v-if="scope.row.cat_level === 0">一级</el-tag>
           <el-tag type="success" v-else-if="scope.row.cat_level === 1">二级</el-tag>
           <el-tag type="warning" v-else>三级</el-tag>
         </template>
+        <!-- 操作自定义列 -->
         <template slot="cat_set" slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="mini" @click="editCatDialogShow(scope.row)">编辑</el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini" @click="editCatDialogShow(scope.row)">删除
@@ -60,8 +63,8 @@
         <el-form-item label="父级分类：">
           <!-- options 用来指定数据源 -->
           <!-- props 用来指定配置对象 -->
-          <el-cascader v-model="selectedKeys" :options="addCatePidList" :props="addCascaderProps" expand-trigger="hover"
-                       @change="addCateChanged" clearable change-on-select>
+          <el-cascader v-model="selectedKeys" :options="addCatePidList" :props="addCascaderProps"
+                       @change="addCateChanged" clearable>
           </el-cascader>
         </el-form-item>
       </el-form>
@@ -143,8 +146,11 @@ export default {
       addCascaderProps: {
         value: 'cat_id',
         label: 'cat_name',
-        children: 'children'
+        children: 'children',
+        expandTrigger: 'hover',
+        checkStrictly: true
       },
+      // 被选分类ID
       selectedKeys: []
     }
   },
@@ -166,23 +172,28 @@ export default {
       this.total = res.data.total
       console.log(res.data)
     },
+    // 监控分类展示页面条数
     handleSizeChange (newSize) {
       this.queryInfo.pagesize = newSize
       this.getCateList()
     },
+    // 监控分类展示更改当前页码
     handleCurrentChange (newPage) {
       this.queryInfo.pagenum = newPage
       this.getCateList()
     },
+    // 监控添加分类弹窗
     addCateDialogShow () {
       this.getCateListTwoLevel()
       this.addCateDialogVisible = true
     },
+    // 获取二级分类列表
     async getCateListTwoLevel () {
       const { data: res } = await this.$http.get('categories', { params: { type: 2 } })
       // console.log(res)
       this.addCatePidList = res.data
     },
+    // 赋值更改选择分类ID
     addCateChanged () {
       this.addCateInfo.cat_pid = this.selectedKeys
       // 如果 selectedKeys 数组中的 length 大于0，证明有选中的父级分类
@@ -198,12 +209,14 @@ export default {
       }
       // console.log(this.addCateInfo)
     },
+    // 隐藏添加分类弹窗
     addCateDialogHide () {
       this.$refs.addCateFormRef.resetFields()
       this.addCateInfo.cat_pid = 0
       this.addCateInfo.cat_level = 0
       this.selectedKeys = []
     },
+    // 提交添加分类
     addCateSubmit () {
       this.$refs.addCateFormRef.validate(async (valid) => {
         if (!valid) {
@@ -214,7 +227,7 @@ export default {
           return this.$message.error('添加分类失败')
         }
         this.$message.success('添加分类成功')
-        this.getCateList()
+        await this.getCateList()
         this.addCateDialogVisible = false
       })
     }
